@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "timezone": "Europe/Berlin",
+  "schedule": ["before 6am on monday"],
+  "semanticCommits": "enabled",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "One weekly PR for routine updates, so the noise stays at one review a week. Majors stay separate: they are the ones that break.",
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "groupName": "weekly dependencies"
+    },
+    {
+      "description": "Patch and digest updates merge themselves once CI is green. CI proves MakeMKV still builds and starts on the new base.",
+      "matchUpdateTypes": ["patch", "digest", "pin", "pinDigest"],
+      "automerge": true
+    },
+    {
+      "description": "Pin the ARM base image by digest, so a rebuild cannot pull different base layers while git stays unchanged. Both FROM lines move together.",
+      "matchManagers": ["dockerfile"],
+      "pinDigests": true
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+name: makemkv-release-check
+
+# MakeMKV's beta expires on a fixed date, and every release so far has come out
+# before the previous one expired. So a new release is the warning: open an
+# issue as soon as one appears, rather than finding out when a rip fails.
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pinned=$(sed -n 's/^ARG MAKEMKV_VERSION=//p' Dockerfile | head -1)
+          # The download page links the signed checksum list as makemkv-sha-<version>.txt.
+          latest=$(curl -fsSL https://www.makemkv.com/download/ | grep -o 'makemkv-sha-[0-9.]*[0-9]\.txt' | head -1 | sed 's/makemkv-sha-//; s/\.txt$//')
+          echo "pinned=$pinned latest=$latest"
+          [ -n "$latest" ] || { echo "::error::could not read the latest version from makemkv.com"; exit 1; }
+          [ "$latest" = "$pinned" ] && exit 0
+          title="MakeMKV $latest is out (pinned: $pinned)"
+          if gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number' | grep -q .; then
+            echo "issue already open"; exit 0
+          fi
+          gh issue create --title "$title" --body "Bump \`ARG MAKEMKV_VERSION\` in both stages of the Dockerfile to \`$latest\` before $pinned expires. When it does, every rip fails with \"This application version is too old\"."
