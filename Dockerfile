@@ -1,8 +1,10 @@
 # The Automatic Ripping Machine image, with a newer MakeMKV than upstream ships.
 #
-# MakeMKV's free beta refuses to run after a fixed date ("This application
-# version is too old"), so an ARM image whose MakeMKV has not been bumped stops
-# ripping entirely. This rebuilds only MakeMKV on top of the pinned ARM image;
+# Each MakeMKV beta build refuses to run after a fixed date, so an ARM image
+# whose MakeMKV has not been bumped eventually stops ripping entirely. (The same
+# "This application version is too old" message also appears when the monthly
+# beta KEY lapses, which a newer build does not fix: see the README.) This
+# rebuilds only MakeMKV on top of the pinned ARM image;
 # everything else -- ARM itself, its entrypoint, healthcheck, HandBrake -- is
 # the upstream image, unchanged.
 #
