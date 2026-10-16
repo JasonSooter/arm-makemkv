@@ -1,4 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>JasonSooter/renovate-config"]
+  "extends": ["local>JasonSooter/renovate-config"],
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Patch and digest updates merge themselves once CI is green. CI proves MakeMKV still builds and starts on the new base.",
+      "matchUpdateTypes": ["patch", "digest", "pin", "pinDigest"],
+      "automerge": true
+    }
+  ]
 }
