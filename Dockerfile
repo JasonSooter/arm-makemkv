@@ -12,7 +12,7 @@
 # the base image's own libraries, so the result links against exactly what the
 # runtime stage has. Renovate updates the two together.
 
-FROM automaticrippingmachine/automatic-ripping-machine:2.24.4@sha256:8d1723f09195810b6c40a40320a02dff895ddf92c857c318e429e49094299fc9 AS build
+FROM automaticrippingmachine/automatic-ripping-machine:2.24.4@sha256:4c8bb170b4b8eaf7d08b6fc3b38faf7974c4ee7ce3315af3d9e7a04e9016b5a9 AS build
 
 ARG MAKEMKV_VERSION=2.0.0
 
@@ -27,7 +27,7 @@ COPY build-makemkv.sh /build-makemkv.sh
 RUN /build-makemkv.sh "$MAKEMKV_VERSION" /out
 
 
-FROM automaticrippingmachine/automatic-ripping-machine:2.24.4@sha256:8d1723f09195810b6c40a40320a02dff895ddf92c857c318e429e49094299fc9
+FROM automaticrippingmachine/automatic-ripping-machine:2.24.4@sha256:4c8bb170b4b8eaf7d08b6fc3b38faf7974c4ee7ce3315af3d9e7a04e9016b5a9
 
 ARG MAKEMKV_VERSION=2.0.0
 LABEL org.opencontainers.image.source="https://github.com/JasonSooter/arm-makemkv" \
